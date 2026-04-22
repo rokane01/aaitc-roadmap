@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARBOR AI Roadmap — AAITC, ARLO &amp; ACE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cyber-green: #00FF87;
+    --cyber-green-dim: #00c868;
+    --metal-grey: #2B2D30;
+    --metal-grey-light: #3A3D42;
+    --slate: #6B7075;
+    --cloud: #F4F5F7;
+    --paper: #FAFAFA;
+    --ink: #1A1B1E;
+    --amber: #FFB800;
+    --warn: #FF6B4A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Montserrat', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 48px 32px 80px; }
+
+  .header { border-top: 6px solid var(--cyber-green); background: var(--metal-grey); color: white; padding: 40px 32px; margin: -48px -32px 48px; position: relative; overflow: hidden; }
+  .header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(0,255,135,0.08) 0%, transparent 70%); pointer-events: none; }
+  .eyebrow { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--cyber-green); font-weight: 700; margin-bottom: 16px; font-family: 'JetBrains Mono', monospace; }
+  h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 16px; }
+  h1 span { color: var(--cyber-green); }
+  .subtitle { font-size: 17px; color: #C8CBCF; font-weight: 400; max-width: 780px; }
+  .meta { margin-top: 24px; display: flex; gap: 24px; flex-wrap: wrap; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: #9CA1A6; }
+  .meta span strong { color: white; font-weight: 500; }
+
+  section { margin-bottom: 56px; }
+  h2 { font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--metal-grey); margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid var(--ink); display: flex; align-items: baseline; gap: 12px; }
+  h2::before { content: attr(data-num); color: var(--cyber-green-dim); font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+  h3 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; }
+  h4 { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 6px; }
+
+  .thesis { background: white; border: 1px solid #E5E7EB; padding: 32px; border-left: 4px solid var(--cyber-green); margin-bottom: 24px; }
+  .thesis p { font-size: 16px; color: var(--slate); }
+  .thesis p + p { margin-top: 12px; }
+  .thesis strong { color: var(--ink); font-weight: 600; }
+  .thesis .hero { font-size: 20px; color: var(--ink); font-weight: 600; line-height: 1.4; margin-bottom: 20px; letter-spacing: -0.01em; }
+
+  .paths { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+  .path { background: white; border: 1px solid #E5E7EB; padding: 24px; position: relative; }
+  .path.a { border-top: 4px solid var(--slate); }
+  .path.b { border-top: 4px solid var(--cyber-green); background: #F8FFF9; }
+  .path.c { border-top: 4px solid var(--amber); }
+  .path-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--slate); margin-bottom: 8px; }
+  .path.b .path-label { color: var(--cyber-green-dim); font-weight: 700; }
+  .path h3 { font-size: 17px; margin-bottom: 12px; line-height: 1.3; }
+  .path .tradeoff { font-size: 13px; color: var(--slate); margin-bottom: 14px; }
+
+  /* ARCHITECTURE DIAGRAM */
+  .arch { background: white; border: 1px solid #E5E7EB; padding: 32px; margin-bottom: 24px; }
+  .arch-layer { display: grid; grid-template-columns: 140px 1fr; gap: 20px; padding: 16px 0; border-bottom: 1px dashed #E5E7EB; align-items: start; }
+  .arch-layer:last-child { border-bottom: none; }
+  .arch-name { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: var(--metal-grey); padding-top: 2px; }
+  .arch-desc { font-size: 14px; color: var(--ink); }
+  .arch-desc strong { color: var(--cyber-green-dim); }
+  .arch-diagram {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 24px;
+  }
+  .arch-box {
+    padding: 14px 20px;
+    border: 1.5px solid var(--ink);
+    background: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .arch-box .sub { font-size: 10px; color: var(--slate); font-weight: 500; text-transform: none; letter-spacing: 0; text-align: right; }
+  .arch-box.tier-1 { background: var(--cyber-green); color: var(--ink); border-color: var(--ink); }
+  .arch-box.tier-2 { background: var(--metal-grey); color: white; border-color: var(--metal-grey); }
+  .arch-box.tier-2 .sub { color: #B5BABE; }
+  .arch-box.tier-3 { background: white; }
+  .arch-box.tier-4 { background: #F4F5F7; border-style: dashed; border-color: var(--slate); color: var(--slate); }
+  .arch-connector { text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--slate); font-weight: 700; padding: 2px; }
+
+  /* PILLAR */
+  .pillar-wrap { background: white; border: 1px solid #E5E7EB; margin-bottom: 24px; }
+  .pillar-head { background: var(--ink); color: white; padding: 24px 32px; }
+  .pillar-tag { display: inline-block; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; padding: 4px 10px; background: var(--cyber-green); color: var(--ink); margin-bottom: 12px; font-family: 'JetBrains Mono', monospace; }
+  .pillar-head h3 { color: white; font-size: 22px; margin-bottom: 6px; }
+  .pillar-head p { color: #C8CBCF; font-size: 14px; }
+  .pillar-body { padding: 28px 32px; }
+  .pillar-body > h4 { text-transform: uppercase; letter-spacing: 2px; font-size: 11px; color: var(--cyber-green-dim); font-family: 'JetBrains Mono', monospace; margin-bottom: 14px; margin-top: 24px; }
+  .pillar-body > h4:first-child { margin-top: 0; }
+  .pillar-body p { font-size: 14px; color: var(--ink); margin-bottom: 12px; }
+  .pillar-body ul { list-style: none; margin-bottom: 16px; }
+  .pillar-body li { font-size: 14px; color: var(--ink); padding: 4px 0 4px 20px; position: relative; }
+  .pillar-body li::before { content: '→'; position: absolute; left: 0; color: var(--cyber-green-dim); font-weight: 700; }
+
+  /* FOLDER TEMPLATE */
+  .folder-template { background: var(--cloud); border: 1px dashed var(--slate); padding: 20px; margin: 16px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+  .folder-template strong { color: var(--cyber-green-dim); }
+  .folder-line { padding: 3px 0; }
+  .folder-indent { padding-left: 20px; color: var(--slate); }
+
+  /* CD PILOT */
+  .pilot-box { background: #F8FFF9; border: 2px solid var(--cyber-green); padding: 24px; position: relative; margin-top: 16px; }
+  .pilot-box::before { content: 'CD PILOT'; position: absolute; top: -11px; left: 24px; background: var(--cyber-green); color: var(--ink); padding: 2px 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 2px; }
+  .pilot-box h4 { margin-top: 4px; color: var(--ink); font-size: 16px; }
+  .pilot-box p { font-size: 13px; color: var(--slate); margin-bottom: 10px; }
+  .pilot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 16px; }
+  .pilot-col h5 { font-size: 10px; letter-spacing: 2px; font-family: 'JetBrains Mono', monospace; color: var(--cyber-green-dim); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; }
+  .pilot-col ul { list-style: none; }
+  .pilot-col li { font-size: 13px; color: var(--ink); padding: 3px 0 3px 16px; position: relative; }
+  .pilot-col li::before { content: '→'; position: absolute; left: 0; color: var(--cyber-green-dim); font-weight: 700; }
+
+  /* RUBRIC */
+  .rubric { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 16px 0; }
+  .rubric-item { background: white; border: 1px solid #E5E7EB; padding: 14px; border-top: 3px solid var(--cyber-green); }
+  .rubric-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--metal-grey); font-weight: 700; margin-bottom: 4px; }
+  .rubric-score { font-size: 13px; color: var(--slate); }
+
+  /* ACE STAGES */
+  .stages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+  .stage { background: white; border: 1px solid #E5E7EB; padding: 18px; }
+  .stage-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--cyber-green-dim); letter-spacing: 2px; font-weight: 700; margin-bottom: 6px; }
+  .stage-name { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+  .stage-tag { font-size: 11px; font-style: italic; color: var(--slate); margin-bottom: 8px; }
+  .stage-body { font-size: 12px; color: var(--ink); line-height: 1.5; }
+
+  .non-negotiables { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+  .nn { background: var(--ink); color: white; padding: 18px; border-top: 3px solid var(--cyber-green); }
+  .nn-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--cyber-green); letter-spacing: 2px; margin-bottom: 8px; }
+  .nn-text { font-size: 13px; font-weight: 600; line-height: 1.4; }
+  .nn-sub { font-size: 11px; color: #B5BABE; margin-top: 8px; line-height: 1.5; }
+
+  .phase { background: white; border: 1px solid #E5E7EB; margin-bottom: 16px; display: grid; grid-template-columns: 180px 1fr; }
+  .phase-marker { background: var(--metal-grey); color: white; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
+  .phase-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--cyber-green); letter-spacing: 2px; }
+  .phase-time { font-weight: 700; font-size: 16px; margin-top: 8px; }
+  .phase-window { font-size: 11px; color: #9CA1A6; font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
+  .phase-body { padding: 24px 28px; }
+  .phase-body h3 { margin-bottom: 6px; }
+  .phase-body .goal { font-size: 13px; color: var(--slate); font-style: italic; margin-bottom: 16px; }
+  .phase-body ul { list-style: none; }
+  .phase-body li { font-size: 14px; padding: 4px 0 4px 20px; position: relative; color: var(--ink); }
+  .phase-body li::before { content: '■'; position: absolute; left: 0; color: var(--cyber-green); font-size: 10px; top: 8px; }
+  .phase-body .owner { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--slate); margin-left: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .phase.pilot-phase { border-left: 4px solid var(--cyber-green); }
+  .phase.pilot-phase .phase-marker { background: var(--cyber-green); color: var(--ink); }
+  .phase.pilot-phase .phase-num { color: var(--ink); opacity: 0.7; }
+
+  .decisions { background: var(--ink); color: white; padding: 32px; }
+  .decisions h2 { color: white; border-bottom-color: var(--cyber-green); }
+  .decision-list { display: grid; gap: 16px; }
+  .decision-item { border-left: 3px solid var(--cyber-green); padding: 8px 16px; }
+  .decision-q { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .decision-a { font-size: 13px; color: #B5BABE; font-family: 'JetBrains Mono', monospace; line-height: 1.5; }
+  .decision-a strong { color: var(--cyber-green); font-weight: 600; }
+
+  .misreads { background: white; border: 1px solid #E5E7EB; }
+  .misread { padding: 18px 24px; border-bottom: 1px solid #E5E7EB; display: grid; grid-template-columns: 1fr 40px 1fr; gap: 20px; align-items: center; }
+  .misread:last-child { border-bottom: none; }
+  .was, .now { font-size: 13px; line-height: 1.5; }
+  .was { color: var(--slate); text-decoration: line-through; text-decoration-color: var(--warn); text-decoration-thickness: 1.5px; }
+  .now { color: var(--ink); font-weight: 500; }
+  .arrow { font-family: 'JetBrains Mono', monospace; color: var(--cyber-green-dim); font-weight: 700; text-align: center; }
+
+  .risks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .risk { background: white; border: 1px solid #E5E7EB; padding: 20px; border-top: 3px solid var(--warn); }
+  .risk-title { font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+  .risk-body { font-size: 13px; color: var(--slate); }
+
+  .actions { background: white; border: 1px solid #E5E7EB; }
+  .action-row { padding: 16px 20px; border-bottom: 1px solid #E5E7EB; display: grid; grid-template-columns: 140px 1fr 100px; gap: 16px; align-items: center; }
+  .action-row:last-child { border-bottom: none; }
+  .action-owner { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--metal-grey); }
+  .action-desc { font-size: 14px; color: var(--ink); }
+  .action-when { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; padding: 4px 8px; text-align: center; background: var(--cloud); color: var(--metal-grey); font-weight: 600; }
+  .action-when.now { background: var(--cyber-green); color: var(--ink); }
+
+  .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid #E5E7EB; font-size: 11px; color: var(--slate); font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; }
+
+  @media (max-width: 720px) {
+    .wrap { padding: 32px 20px 60px; }
+    .header { margin: -32px -20px 32px; padding: 32px 20px; }
+    .risks, .paths, .stages, .non-negotiables, .pilot-grid { grid-template-columns: 1fr; }
+    .rubric { grid-template-columns: 1fr 1fr; }
+    .phase { grid-template-columns: 1fr; }
+    .phase-marker { flex-direction: row; justify-content: space-between; padding: 16px 20px; }
+    .action-row { grid-template-columns: 1fr; gap: 4px; }
+    .action-when { justify-self: start; }
+    .misread { grid-template-columns: 1fr; gap: 8px; }
+    .arrow { text-align: left; }
+    .arch-layer { grid-template-columns: 1fr; gap: 4px; }
+  }
+
+  @media print {
+    body { background: white; }
+    .header, .phase, .path, .decision-item, .risk, .stage, .nn, .pillar-wrap, .arch, .pilot-box { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="header">
+    <div class="eyebrow">ROADMAP // V0.5 // INTERNAL</div>
+    <h1>ARBOR AI Roadmap<br><span style="font-size: 0.6em; font-weight: 700;">AAITC, ARLO &amp; ACE</span></h1>
+    <p class="subtitle">The Arbor AI Tool Chest is where every skill lives. ARLO is the outward-facing brand that deploys those skills. Two pillars: AAITC (ops infrastructure) and ACE (AI-powered CRM communication layer). Flexible on Dynamics. Portable by design.</p>
+    <div class="meta">
+      <span><strong>Sources:</strong> Ryan&lt;&gt;Mike 04/20, Project(s) Alignment 04/21, Patty Charter 04/16</span>
+      <span><strong>Prepared:</strong> 04/21/26</span>
+    </div>
+  </header>
+
+  <section>
+    <h2 data-num="00">Framing</h2>
+    <div class="thesis">
+      <p class="hero">The real question isn't "how do we build AI tools inside Dynamics." It's how we build a skills-based AI layer that's flexible enough to stay on Dynamics, extend it, or leave it — without rebuilding along the way.</p>
+      <p>This iteration surfaced that department heads, leadership, managers, and contractors were all operating from different assumptions about where tools had to live and how they'd connect. That's on me — I didn't align the full team or establish a clear vision before hitting start. The goal now is to close that gap with one shared architecture and one shared operating model everyone can build against.</p>
+      <p>Skills are the units. <strong>AAITC</strong> is where every skill lives. <strong>ARLO</strong> is the deployment surface — app or sidecar depending on user and need. Its dashboard and skills depend on the user's role. Current domain apps are <strong>The CODE</strong> and the <strong>Marketing Dashboard</strong>, and more can be designed as needed. <strong>ACE</strong> is the AI-powered communication layer that runs across every CRM-based system at Arbor — the overarching goal being maximum agentic use in personalized funnel management.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-num="01">Platform Flexibility (Not a Decision — Yet)</h2>
+    <div class="thesis">
+      <p class="hero">We don't have the bandwidth for a platform shift right now. What we need is flexibility around the current system, not a forced choice.</p>
+      <p>Stay / Extend / Leave is a real question but it surfaces later — likely Q4 or beyond — when we have the capacity to take a shift on. Until then, the principle is flexibility: every skill we build must work whether Dynamics stays the backbone, gets extended, or eventually gets replaced. The architecture decision gets made in a separate project when the timing is right.</p>
+    </div>
+    <div class="paths">
+      <div class="path a">
+        <div class="path-label">POSTURE NOW</div>
+        <h3>Build flexible, defer decision</h3>
+        <p class="tradeoff">Skills portable. UI external. Dynamics via API. Keep all platform options open without committing bandwidth to a migration.</p>
+      </div>
+      <div class="path b">
+        <div class="path-label">NEAR-TERM OPTION</div>
+        <h3>Enhance what we have</h3>
+        <p class="tradeoff">Creative external UI work that improves EiOS / ARP / AIS / HR / LoanVision / Business Central. Most cost-effective, easiest to manage.</p>
+      </div>
+      <div class="path c">
+        <div class="path-label">FUTURE</div>
+        <h3>Revisit Q4+</h3>
+        <p class="tradeoff">Platform viability study kicked to its own project when bandwidth exists. No forced decision in this roadmap.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-num="02">Architecture — The Skills Model</h2>
+    <div class="arch">
+      <h3 style="margin-bottom: 8px;">How the pieces fit</h3>
+      <p style="font-size: 14px; color: var(--slate); margin-bottom: 20px; max-width: 820px;">Work flows top-down: job context feeds skills, skills live in AAITC, AAITC stays alive through continuous update. <strong style="color: var(--ink);">Skills are then deployed to users one of two ways — through ARLO (default, role-keyed) or through a domain app (when the use case warrants its own surface, like The CODE or the Marketing Dashboard).</strong></p>
+      <div class="arch-layer">
+        <div class="arch-name">LAYER 01</div>
+        <div class="arch-desc"><strong>Job Context</strong> — role-specific folders following the AI Operating Model template. ROLE / WORKFLOWS / DECISIONS / FRICTION / EXAMPLES / TOOLS / PROMPTS. Markdown-first. Living documents. Governed by Patty's input-quality standards.</div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-name">LAYER 02</div>
+        <div class="arch-desc"><strong>Skills</strong> — discrete capabilities with prerequisite dependencies. "Label &amp; Classify Docs" before "Draft CD." Each skill pulls from job context, writes back to systems of record. Composable, versioned, role-keyed.</div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-name">LAYER 03</div>
+        <div class="arch-desc"><strong>AAITC</strong> — the Arbor AI Tool Chest. Every skill built at Arbor lives here. Central source of truth for what exists, who owns it, and how it connects to ARLO, domain apps, and external systems.</div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-name">LAYER 04</div>
+        <div class="arch-desc"><strong>Continuous Update Layer</strong> — skills don't ship once. Monthly AI Operations Review re-scores the backlog. Each tool has a steward responsible for ongoing health. Friction logs feed new skill requests. This is how AAITC stays alive instead of becoming a museum.</div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-name">LAYER 05</div>
+        <div class="arch-desc"><strong>ARLO</strong> — the outward-facing brand. Deploys skills from AAITC. App or sidecar depending on user and need. Dashboard + skill bundle keyed to the user's role. Processors see processor skills; LOAs see LOA skills; Ryan sees Ryan skills.</div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-name">LAYER 06</div>
+        <div class="arch-desc"><strong>Domain apps</strong> — current apps are <strong>The CODE</strong> (referral partner development) and the <strong>Marketing Dashboard</strong>. More can be designed as needed. Most role-specific capability lives as skills inside ARLO, not as standalone apps. ACE powers communication sequences across the stack.</div>
+      </div>
+
+      <div class="arch-diagram">
+        <div class="arch-box tier-3"><span>JOB CONTEXT</span><span class="sub">AI Operating Model folders · markdown</span></div>
+        <div class="arch-connector">▼</div>
+        <div class="arch-box tier-2"><span>SKILLS</span><span class="sub">composable · prerequisite chains · role-keyed</span></div>
+        <div class="arch-connector">▼</div>
+        <div class="arch-box tier-1"><span>AAITC</span><span class="sub">every skill · central source of truth</span></div>
+        <div class="arch-connector">▼</div>
+        <div class="arch-box tier-2"><span>CONTINUOUS UPDATE</span><span class="sub">monthly AI Ops Review · stewards · friction loop</span></div>
+        <div class="arch-connector">▼</div>
+        <div class="arch-box tier-3"><span>ARLO</span><span class="sub">app or sidecar · role-keyed dashboard + skills</span></div>
+        <div class="arch-connector">▼</div>
+        <div class="arch-box tier-4"><span>DOMAIN APPS</span><span class="sub">THE CODE · MARKETING DASHBOARD · more as needed</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-num="03">The Two Product Pillars</h2>
+
+    <div class="pillar-wrap">
+      <div class="pillar-head">
+        <span class="pillar-tag">PILLAR 01 // OPS</span>
+        <h3>AAITC — Arbor AI Tool Chest</h3>
+        <p>Infrastructure. Every skill lives here. Governed by the AI Operating Model. Deploys via ARLO.</p>
+      </div>
+      <div class="pillar-body">
+
+        <h4>WHAT IT IS</h4>
+        <p>AAITC is the central inventory and source of truth — not a dashboard layered on top of existing tools, but the place every skill at Arbor actually lives. ARLO, The CODE, the Marketing Dashboard, and external tools all pull from it. This is the moat.</p>
+
+        <h4>GOVERNED BY THE AI OPERATING MODEL</h4>
+        <p>Patty owns the framework every department builds against. Four deliverables, 4-week cadence:</p>
+        <ul>
+          <li><strong>Folder template</strong> — canonical structure every role uses (draft: ROLE / WORKFLOWS / DECISIONS / FRICTION / EXAMPLES / TOOLS / PROMPTS). Patty finalizes with input from Jason + Mike.</li>
+          <li><strong>Input quality guide</strong> — how to capture context well. The "garbage in, garbage out" antidote. Patty authors.</li>
+          <li><strong>Retrieval architecture</strong> — RAG vs. Claude Projects/Skills vs. MCP connectors. Patty recommends with Jason + Mike. Week 2 one-pager.</li>
+          <li><strong>Governance</strong> — every deployed tool needs builder, owner/steward, adoption plan, measurable outcome. Continuous AI accountability, not traditional launch-and-forget.</li>
+        </ul>
+
+        <h4>FOLDER TEMPLATE (WORKING DRAFT — PATTY OWNS FINAL)</h4>
+        <div class="folder-template">
+          <div class="folder-line"><strong>/[role-name]/</strong></div>
+          <div class="folder-line folder-indent">├── ROLE.md <span style="color: var(--slate)">— who, scope, KPIs</span></div>
+          <div class="folder-line folder-indent">├── WORKFLOWS/ <span style="color: var(--slate)">— step-by-step processes</span></div>
+          <div class="folder-line folder-indent">├── DECISIONS/ <span style="color: var(--slate)">— rules, heuristics, escalation</span></div>
+          <div class="folder-line folder-indent">├── FRICTION/ <span style="color: var(--slate)">— what's broken, what takes too long</span></div>
+          <div class="folder-line folder-indent">├── EXAMPLES/ <span style="color: var(--slate)">— good outputs, patterns to emulate</span></div>
+          <div class="folder-line folder-indent">├── TOOLS/ <span style="color: var(--slate)">— systems, logins, references</span></div>
+          <div class="folder-line folder-indent">└── PROMPTS/ <span style="color: var(--slate)">— role-specific prompt library</span></div>
+        </div>
+
+        <h4>SCORING RUBRIC (STARTING PROPOSAL)</h4>
+        <div class="rubric">
+          <div class="rubric-item"><div class="rubric-label">Revenue Impact</div><div class="rubric-score">1–5</div></div>
+          <div class="rubric-item"><div class="rubric-label">Time Saved</div><div class="rubric-score">1–5 (hrs/wk × people)</div></div>
+          <div class="rubric-item"><div class="rubric-label">Strategic Fit</div><div class="rubric-score">1–5 (Broker-Banker, EiOS, CODE)</div></div>
+          <div class="rubric-item"><div class="rubric-label">Build Effort</div><div class="rubric-score">1–5 inverted</div></div>
+          <div class="rubric-item"><div class="rubric-label">Risk/Compliance</div><div class="rubric-score">1–5 inverted</div></div>
+        </div>
+
+        <h4>CD DRAWER — THE PILOT</h4>
+        <div class="pilot-box">
+          <h4>Closing Disclosures, end to end</h4>
+          <p>Two employees currently draw CDs — both are the role owners for the pilot. The workflow itself is ~55–65 steps and wraps SharePoint + Arrive. First proof that the AI Operating Model + AAITC + ARLO deployment all work together on a real role.</p>
+          <div class="pilot-grid">
+            <div class="pilot-col">
+              <h5>WHY THIS ROLE FIRST</h5>
+              <ul>
+                <li>Well-defined process</li>
+                <li>Two employees hold the role — paired implementation</li>
+                <li>Heavy document manipulation</li>
+                <li>Natural prerequisite chain</li>
+                <li>Proves cross-system skill deployment</li>
+              </ul>
+            </div>
+            <div class="pilot-col">
+              <h5>WHAT WE PROVE</h5>
+              <ul>
+                <li>AI Operating Model works end to end</li>
+                <li>Skill prerequisite chains are real</li>
+                <li>ARLO deploys skills into live workflows</li>
+                <li>30-day iteration loop improves outputs</li>
+                <li>Pattern extends to funders, shippers, verifiers</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="pillar-wrap">
+      <div class="pillar-head">
+        <span class="pillar-tag">PILLAR 02 // CRM COMMUNICATION</span>
+        <h3>ACE — Arbor Communication Engine</h3>
+        <p>The AI-powered communication layer for every CRM-based system at Arbor. Six stages. Every audience. Maximum agentic use in personalized funnel management.</p>
+      </div>
+      <div class="pillar-body">
+
+        <h4>WHAT IT IS</h4>
+        <p>ACE is the AI-powered communication layer for every CRM-based system at Arbor. The overarching goal is <strong>maximum agentic use in personalized CRM funnel management</strong> — every prospect, every client, every partner, every recruit gets moved through their funnel with AI-driven communication tuned to them and delivered in the voice of the Arbor person who owns the relationship.</p>
+        <p>Same six-stage flow regardless of audience (recruits, realtors, CPAs, FAs, insurance prospects, existing clients, past clients). Every Arbor system with a CRM dimension — ARP, The CODE, EiOS, AIS, and anything we add — runs through ACE for the communication piece.</p>
+
+        <h4>USER VOICE LIBRARY</h4>
+        <p>The hardest part of agentic CRM communication is making AI-driven outreach sound like the actual person on the account — not a generic brand voice. ACE solves this by building a <strong>context library for each relationship owner</strong> (LO, recruiter, insurance agent, partner rep, executive): their phrasing, their isms, their tone, their go-to analogies, how they open, how they handle objections, how they close.</p>
+        <p>Every outbound communication — comment, reply, DM, script, follow-up — is generated in the voice of the relationship owner the engagement is tied to. The prospect or client never experiences a brand voice; they experience Ryan's voice, or Jess's voice, or David's voice. Agentic conversation flows stay in character through the entire sequence.</p>
+        <div class="folder-template">
+          <div class="folder-line"><strong>/voice-library/[owner-name]/</strong></div>
+          <div class="folder-line folder-indent">├── TRAITS.md <span style="color: var(--slate)">— tone, pace, personality markers</span></div>
+          <div class="folder-line folder-indent">├── ISMS.md <span style="color: var(--slate)">— signature phrases, metaphors, vocabulary</span></div>
+          <div class="folder-line folder-indent">├── OPENS/ <span style="color: var(--slate)">— how they start conversations</span></div>
+          <div class="folder-line folder-indent">├── OBJECTIONS/ <span style="color: var(--slate)">— how they handle pushback</span></div>
+          <div class="folder-line folder-indent">├── CLOSES/ <span style="color: var(--slate)">— how they ask for the next step</span></div>
+          <div class="folder-line folder-indent">├── TRANSCRIPTS/ <span style="color: var(--slate)">— Grain + email source material</span></div>
+          <div class="folder-line folder-indent">└── EXAMPLES/ <span style="color: var(--slate)">— exemplar outreach they've approved</span></div>
+        </div>
+        <p style="font-size: 13px; color: var(--slate); margin-top: 12px;"><strong style="color: var(--ink);">Source material:</strong> Grain meeting transcripts, sent email, LinkedIn posts, approved scripts. Same job-capture protocol as every other AAITC skill. The owner reviews and approves exemplars; the library stays current through the 30-day iteration cycle.</p>
+        <p style="font-size: 13px; color: var(--slate); margin-top: 8px;"><strong style="color: var(--ink);">Where it lives:</strong> Voice profiles are skills in AAITC. ACE consumes them at Stage 03 (Segment &amp; Match) to assign the right voice, then Stages 04–06 generate all output in that voice.</p>
+
+        <h4>SIX-STAGE FLOW</h4>
+        <div class="stages">
+          <div class="stage"><div class="stage-num">STAGE 01</div><div class="stage-name">Identify</div><div class="stage-tag">Find them.</div><div class="stage-body">Pull queues from any connected CRM (ARP, The CODE, EiOS, AIS, and more).</div></div>
+          <div class="stage"><div class="stage-num">STAGE 02</div><div class="stage-name">Research</div><div class="stage-tag">Know them.</div><div class="stage-body">Claude composes the dossier from social + public web.</div></div>
+          <div class="stage"><div class="stage-num">STAGE 03</div><div class="stage-name">Segment &amp; Match</div><div class="stage-tag">Pick the voice.</div><div class="stage-body">Cluster by signal. Pull the relationship owner's profile from the voice library + match cadence.</div></div>
+          <div class="stage"><div class="stage-num">STAGE 04</div><div class="stage-name">Warm</div><div class="stage-tag">Earn the open.</div><div class="stage-body">Engagement generated in the relationship owner's voice. Human approves before posting.</div></div>
+          <div class="stage"><div class="stage-num">STAGE 05</div><div class="stage-name">Listen</div><div class="stage-tag">Read the room.</div><div class="stage-body">Track response, engagement velocity, intent signals.</div></div>
+          <div class="stage"><div class="stage-num">STAGE 06</div><div class="stage-name">Script &amp; Trigger</div><div class="stage-tag">Walk in ready.</div><div class="stage-body">CODE Blueprint script + webhook signal. Human taps and dials.</div></div>
+        </div>
+
+        <h4>SYSTEMS ACE POWERS</h4>
+        <p style="font-size: 13px; color: var(--slate); margin-bottom: 10px;">All are CRM-based. All need augmented communication. All run the same six-stage flow with audience-specific skill bundles.</p>
+        <ul>
+          <li><strong>ARP</strong> — Arbor Recruiting Portal. LO recruiting funnel.</li>
+          <li><strong>The CODE</strong> — referral partner development (Realtors, CPAs, FAs, Attorneys).</li>
+          <li><strong>EiOS</strong> — existing clients, past clients, in-process loans, reactivation triggers.</li>
+          <li><strong>AIS</strong> — Arbor Insurance Services. Insurance prospect and client communication.</li>
+          <li><strong>Future CRM surfaces</strong> — any new system with a funnel attached plugs into ACE by default, not as a one-off build.</li>
+        </ul>
+
+        <h4>NON-NEGOTIABLES</h4>
+        <div class="non-negotiables">
+          <div class="nn"><div class="nn-num">NN 01</div><div class="nn-text">Build the engine, not the feature.</div><div class="nn-sub">Every capability is a skill in AAITC. No one-off tools.</div></div>
+          <div class="nn"><div class="nn-num">NN 02</div><div class="nn-text">Humans close. Always.</div><div class="nn-sub">AI warms, researches, drafts, practices. The human makes the call.</div></div>
+          <div class="nn"><div class="nn-num">NN 03</div><div class="nn-text">Portable by design.</div><div class="nn-sub">Our data model, our UI. Connect via API to whatever the backbone is today.</div></div>
+          <div class="nn"><div class="nn-num">NN 04</div><div class="nn-text">One ARLO, many skills.</div><div class="nn-sub">Role-keyed. Never multiple UIs for the same pattern.</div></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-num="04">Strategic Principle</h2>
+    <div class="thesis">
+      <p class="hero">Build skills, keep them portable, and use creative external UI to enhance what we already have.</p>
+      <p>Until we have the bandwidth for a platform shift, the discipline is:</p>
+      <p>→ <strong>Skills live in AAITC</strong>, not duplicated inside domain apps<br>
+      → <strong>The CODE and the Marketing Dashboard are our current domain apps</strong>. More can be designed as needed; most capability lives as skills inside ARLO keyed to role<br>
+      → <strong>UI lives outside Dynamics</strong> as a default<br>
+      → <strong>Creative external UI to enhance existing systems</strong> (EiOS, ARP, AIS, HR, LoanVision, Business Central) is explicitly encouraged — often the most cost-effective move<br>
+      → <strong>Data model is ours</strong>, accessed via API to whatever's the backbone today<br>
+      → <strong>Markdown-first storage</strong> (SharePoint is today's location, not tomorrow's coupling)</p>
+      <p>Domain apps can standalone or connect — both are fine. The test is whether the skill underneath survives a platform change. If yes, ship it. If no, refactor before shipping.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-num="05">Phased Delivery</h2>
+
+    <div class="phase">
+      <div class="phase-marker">
+        <div><div class="phase-num">PHASE 01</div><div class="phase-time">Align + Structure</div></div>
+        <div class="phase-window">Next 2 weeks</div>
+      </div>
+      <div class="phase-body">
+        <h3>AAITC structure, folder template, demo cleanup</h3>
+        <p class="goal">Jason focuses on AAITC structure first. Patty delivers folder template + input quality guide so every Context Owner can start building.</p>
+        </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-marker">
+        <div><div class="phase-num">PHASE 02</div><div class="phase-time">ACE Structure</div></div>
+        <div class="phase-window">Weeks 2–4</div>
+      </div>
+      <div class="phase-body">
+        <h3>Jason turns to ACE</h3>
+        <p class="goal">With AAITC scaffold in place, Jason builds ACE structure. Six stages mapped as skill bundles in AAITC.</p>
+        </div>
+    </div>
+
+    <div class="phase pilot-phase">
+      <div class="phase-marker">
+        <div><div class="phase-num">PHASE 03 // PILOT</div><div class="phase-time">CD Drawer</div></div>
+        <div class="phase-window">Weeks 4–8</div>
+      </div>
+      <div class="phase-body">
+        <h3>Prove the stack on one role</h3>
+        <p class="goal">Patty + Shirley build the CD drawer folders per the AI Operating Model. When done, they notify Jason so he can build the agent. Then Mike, Jason, and Patty connect ARLO to CD beta to see how it works.</p>
+        </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-marker">
+        <div><div class="phase-num">PHASE 04</div><div class="phase-time">ARLO Beta Expansion</div></div>
+        <div class="phase-window">Weeks 8–12</div>
+      </div>
+      <div class="phase-body">
+        <h3>Extend ARLO beta — processors + LOAs</h3>
+        <p class="goal">Patty expands ARLO beta to processors and loan officer assistants. Same AI Operating Model folder protocol. Same skill-build pattern.</p>
+        </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-marker">
+        <div><div class="phase-num">PHASE 05</div><div class="phase-time">ACE Live</div></div>
+        <div class="phase-window">Weeks 10–16</div>
+      </div>
+      <div class="phase-body">
+        <h3>ACE recruiting module — mock to production</h3>
+        <p class="goal">Jason drives ACE live deployment. Six ACE stages become live skill bundles in AAITC. Recruiting is the first audience.</p>
+        </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-marker">
+        <div><div class="phase-num">PHASE 06</div><div class="phase-time">Scale</div></div>
+        <div class="phase-window">Weeks 16–24</div>
+      </div>
+      <div class="phase-body">
+        <h3>Extend skill coverage + audiences</h3>
+        <p class="goal">Apply the AI Operating Model to more roles. Extend ACE to more audiences. Prove the "one engine, many bundles" thesis.</p>
+        </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-num="06">Action Log</h2>
+    <div class="actions">
+      <div class="action-row">
+        <div class="action-owner">Jason McMunn</div>
+        <div class="action-desc">Build AAITC structure (skill registry)</div>
+        <div class="action-when now">Phase 1</div>
+      </div>
+      <div class="action-row">
+        <div class="action-owner">Jason McMunn</div>
+        <div class="action-desc">Build ACE structure on top of AAITC</div>
+        <div class="action-when">Phase 2</div>
+      </div>
+      <div class="action-row">
+        <div class="action-owner">Jason McMunn</div>
+        <div class="action-desc">Build CD drawer agent once folders complete</div>
+        <div class="action-when">Phase 3</div>
+      </div>
+      <div class="action-row">
+        <div class="action-owner">Jason McMunn</div>
+        <div class="action-desc">Lead ACE live deployment (all six stages)</div>
+        <div class="action-when">Phase 5</div>
+      </div>
+      <div class="action-row">
+        <div class="action-owner">Mike Adams</div>
+        <div class="action-desc">ARLO development — harness, deployment, role-keyed UI</div>
+        <div class="action-when">Phase 2+</div>
+      </div>
+      <div class="action-row">
+        <div class="action-owner">Ryan + Mike</div>
+        <div class="action-desc">Rework ARLO SOW (production-grade, expanded scope)</div>
+        <div class="action-when now">Next 2 wks</div>
+      </div>
+      <div class="action-row">
+        <div class="action-owner">Patty La Giglia</div>
+        <div class="action-desc">Finalize folder template (ROLE / WORKFLOWS / DECISIONS / FRICTION / EXAMPLES / TOOLS / PROMPTS)</div>
+        <div class="action-when now">Week 1</div>
+      </div>
+      <div class="action-row">
+        <div class="action-owner">Patty La Giglia</div>
+        <div class="action-desc">Author input quality guide</div>
+        <div class="action-when now">Week 1</div>
+      </div>
+      <div class="action-row">
+        <div class="action-owner">Patty La Giglia</div>
+        <div class="action-desc">Retrieval architecture recommendation (one-pager)</div>
+        <div class="action-when">Week 2</div>
+      </div>
+      <div class="action-row">
+        <div class="action-owner">Patty La Giglia</div>
+        <div class="action-desc">AAITC governance + scoring rubric finalized</div>
+        <div class="action-when">Week 3</div>
+      </div>
+      <div class="action-row">
+        <div class="action-owner">Patty La Giglia</div>
+        <div class="action-desc">First monthly AI Operations Review on calendar</div>
+        <div class="action-when">Week 4</div>
+      </div>
+      <div class="action-row">
+        <div class="action-owner">Patty La Giglia</div>
+        <div class="action-desc">Verify with Vitali whether current recording solution uses Co-pilot</div>
+        <div class="action-when now">This wk</div>
+      </div>
+      <div class="action-row">
+        <div class="action-owner">Patty + Shirley</div>
+        <div class="action-desc">Build CD drawer folders per AI Operating Model; notify Jason when complete</div>
+        <div class="action-when">Phase 3</div>
+      </div>
+      <div class="action-row">
+        <div class="action-owner">Patty La Giglia</div>
+        <div class="action-desc">Expand ARLO beta to processors + LOAs (folder protocol)</div>
+        <div class="action-when">Phase 4</div>
+      </div>
+      <div class="action-row">
+        <div class="action-owner">Mike + Jason + Patty</div>
+        <div class="action-desc">Connect ARLO with CD beta — test deployment</div>
+        <div class="action-when">Phase 3</div>
+      </div>
+      <div class="action-row">
+        <div class="action-owner">Ryan O'Kane</div>
+        <div class="action-desc">Send shared architecture doc to Jason, Patty, Shirley, Jess, Mike</div>
+        <div class="action-when now">This wk</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    ARBOR AI ROADMAP V0.5 // SOURCES: GRAIN RYAN&lt;&gt;MIKE 04.20 + PROJECT(S) ALIGNMENT 04.21 + PATTY CHARTER 04.16 // PLATFORM DECISION DEFERRED TO Q4+ // ARLO = OUTWARD-FACING BRAND // SKILLS ARE THE UNIT
+  </div>
+
+</div>
+</body>
+</html>
